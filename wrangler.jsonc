@@ -7,6 +7,9 @@
   "observability": {
     "enabled": true
   },
+  "vars": {
+    "REPTRIQ_RELEASE": "2026-08-09-brand-v2"
+  },
   "d1_databases": [
     {
       "binding": "DB",
