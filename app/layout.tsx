@@ -4,6 +4,7 @@ import "./globals.css";
 import "./power-features.css";
 import "./sheet-only.css";
 import "./exercise-loads.css";
+import "./reptriq-theme.css";
 import PowerSuite from "./power-suite";
 import ExerciseLoads from "./exercise-loads";
 import ThemeBrand from "./theme-brand";
