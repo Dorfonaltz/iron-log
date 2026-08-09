@@ -1,17 +1,23 @@
 {
   "name": "REPTRIQ — Train. Track. Evolve.",
   "short_name": "REPTRIQ",
-  "description": "Aplicativo de treino e força com PRs, histórico e evolução.",
+  "description": "Aplicativo de treino e powerlifting",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#070708",
-  "theme_color": "#0b0b0d",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "/app-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
