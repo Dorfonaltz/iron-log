@@ -1,0 +1,122 @@
+/* Última carga usada em cada exercício — ficha simples, sem sessão/cronômetro. */
+.exercise-load-slot {
+  background: #121215;
+  border-bottom: 1px solid #333238;
+  color: #f5f0e7;
+}
+
+.last-load-row {
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: minmax(105px, 1fr) 58px 58px 58px auto;
+  gap: 6px;
+  align-items: end;
+  padding: 8px 9px 10px 48px;
+}
+
+.last-load-copy {
+  align-self: center;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.last-load-copy > span {
+  color: #e9625b;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .14em;
+}
+.last-load-copy > small {
+  color: #8d9288;
+  font-size: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.last-load-row label {
+  display: grid;
+  gap: 4px;
+  color: #777b73;
+  font-size: 6px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-align: center;
+}
+.last-load-row input {
+  min-width: 0;
+  width: 100%;
+  height: 34px;
+  border: 1px solid #454840;
+  border-radius: 2px;
+  background: #202025;
+  color: white;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
+  outline: none;
+}
+.last-load-row input:focus {
+  border-color: #e23a31;
+  box-shadow: 0 0 0 1px #e23a31;
+}
+
+.last-load-save {
+  height: 34px;
+  border: 1px solid #ef6d66;
+  background: #e23a31;
+  color: white;
+  padding: 0 8px;
+  font-size: 6px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+.last-load-clear {
+  align-self: end;
+  width: 28px;
+  height: 34px;
+  border: 1px solid #3e403b;
+  background: transparent;
+  color: #8f918a;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.load-sync-indicator {
+  position: fixed;
+  z-index: 19;
+  right: max(10px, calc((100vw - 520px) / 2 + 10px));
+  bottom: 82px;
+  min-width: 68px;
+  padding: 5px 7px;
+  background: rgba(11,11,13,.88);
+  border: 1px solid #3d3d40;
+  color: #a8aaa4;
+  font-size: 6px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-align: center;
+  pointer-events: none;
+}
+.load-sync-indicator.synced { color: #71c78a; }
+.load-sync-indicator.syncing { color: #e3ac4d; }
+.load-sync-indicator.offline { color: #ef6a64; }
+
+@media (max-width: 470px) {
+  .last-load-row {
+    grid-template-columns: 1fr 54px 54px 54px 26px;
+    padding-left: 14px;
+  }
+  .last-load-copy { grid-column: 1 / -1; }
+}
+
+@media (max-width: 350px) {
+  .last-load-row {
+    grid-template-columns: 1fr 1fr 66px 26px;
+  }
+  .last-load-copy { grid-column: 1 / -1; }
+  .last-load-row label:first-of-type { grid-column: 1; }
+  .last-load-row label:nth-of-type(2) { grid-column: 2; }
+}
