@@ -6,6 +6,7 @@ import "./sheet-only.css";
 import "./exercise-loads.css";
 import PowerSuite from "./power-suite";
 import ExerciseLoads from "./exercise-loads";
+import ThemeBrand from "./theme-brand";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Iron Log | Powerlifting",
-  description: "Ficha de treino de força com acompanhamento dos recordes de agachamento, supino e levantamento terra.",
+  title: "REPTRIQ | Train. Track. Evolve.",
+  description: "Aplicativo de treino e força com acompanhamento de PRs, histórico e evolução.",
   other: {
     "codex-preview": "development",
   },
@@ -37,9 +38,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" data-theme="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
+        <ThemeBrand />
         <ExerciseLoads />
         <PowerSuite />
       </body>
