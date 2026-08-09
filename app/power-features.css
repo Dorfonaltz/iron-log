@@ -1,0 +1,75 @@
+/* Powerlifting analytics, PR history and competition mode */
+.feature-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.feature-heading > div { display: flex; flex-direction: column; gap: 4px; }
+.feature-heading span, .feature-heading > small { color: var(--muted); font-size: 7px; font-weight: 900; letter-spacing: .15em; }
+.feature-heading strong { font-family: Impact, "Arial Black", sans-serif; font-size: 20px; letter-spacing: .035em; }
+.feature-heading button { min-height: 34px; border: 1px solid var(--ink); background: transparent; padding: 0 10px; font-size: 7px; font-weight: 900; letter-spacing: .09em; cursor: pointer; }
+
+.power-score-panel, .chart-card { margin: 14px 0; border: 2px solid var(--ink); padding: 16px; background: #e0d9ce; }
+.power-score-panel { border-left: 7px solid var(--acid); }
+.athlete-meta { display: flex; justify-content: space-between; gap: 10px; margin-top: 15px; padding-top: 11px; border-top: 1px solid var(--line); }
+.athlete-meta span { color: var(--muted); font-size: 8px; font-weight: 900; letter-spacing: .1em; }
+.athlete-meta b { font-size: 9px; }
+.score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.score-grid article { min-height: 92px; background: var(--ink); color: white; padding: 13px; display: flex; flex-direction: column; justify-content: space-between; }
+.score-grid small { color: #e96660; font-size: 8px; font-weight: 900; letter-spacing: .15em; }
+.score-grid strong { font-family: Impact, "Arial Black", sans-serif; font-size: 36px; line-height: 1; }
+.feature-empty { margin: 14px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+
+.chart-card { background: #f0eadf; }
+.sbd-chart-wrap { margin-top: 13px; }
+.sbd-chart { width: 100%; height: auto; background: #0b0b0d; display: block; }
+.chart-axis { stroke: rgba(255,255,255,.18); stroke-width: 1; }
+.chart-line { fill: none; stroke: #e23a31; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+.chart-dot { fill: #f6eee3; stroke: #e23a31; stroke-width: 2; }
+.chart-caption { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 7px; font-size: 7px; color: var(--muted); text-transform: uppercase; }
+.chart-caption strong { color: var(--ink); font-size: 10px; }
+.chart-caption span:last-child { text-align: right; }
+.sbd-chart-empty { margin-top: 13px; border: 1px dashed var(--line); min-height: 90px; display: grid; place-items: center; padding: 15px; text-align: center; color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
+
+.lift-history-wrap { display: grid; }
+.pr-history-box { margin-top: -2px; border: 2px solid var(--ink); border-top: 0; background: #f1eadf; padding: 10px 12px 12px; }
+.pr-history-title { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px; }
+.pr-history-title span { color: #a91f19; font-size: 7px; font-weight: 900; letter-spacing: .13em; }
+.pr-history-title small { color: var(--muted); font-size: 7px; }
+.pr-history-row { min-height: 31px; display: grid; grid-template-columns: 62px 1fr auto; align-items: center; gap: 8px; border-top: 1px solid rgba(11,11,13,.1); }
+.pr-history-row time { color: var(--muted); font-size: 7px; text-transform: uppercase; }
+.pr-history-row strong { font-size: 9px; }
+.pr-history-row span { color: var(--muted); font-size: 7px; text-transform: uppercase; }
+.danger-reset { display: block; width: 100%; min-height: 45px; margin: 18px 0 0; border: 1px solid #a91f19; background: transparent; color: #a91f19; font-size: 8px; font-weight: 900; letter-spacing: .12em; cursor: pointer; }
+.danger-link { color: #a91f19 !important; font-weight: 900; }
+
+.profile-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.profile-fields label, .competition-lift-select { display: grid; gap: 7px; color: var(--muted); font-size: 8px; font-weight: 900; letter-spacing: .1em; }
+.profile-fields input, .profile-fields select, .competition-lift-select select { width: 100%; min-height: 50px; border: 1px solid var(--line); background: white; color: var(--ink); padding: 0 11px; font-size: 13px; font-weight: 800; }
+
+.competition-launch { width: 100%; min-height: 43px; margin-top: 16px; border: 1px solid #ef6a64; background: #17171a; color: #f1ece3; font-size: 8px; font-weight: 900; letter-spacing: .11em; cursor: pointer; }
+.competition-backdrop { z-index: 90; }
+.competition-modal { border-top: 7px solid var(--acid); }
+.competition-current { margin: 12px 0 10px; padding: 11px 12px; background: var(--ink); color: white; display: flex; justify-content: space-between; align-items: center; }
+.competition-current span { color: #e96660; font-size: 7px; font-weight: 900; letter-spacing: .13em; }
+.competition-current strong { font-family: Impact, "Arial Black", sans-serif; font-size: 20px; }
+.attempt-list { border: 1px solid var(--ink); }
+.attempt-row { min-height: 64px; display: grid; grid-template-columns: 35px 1fr 47px 47px; align-items: center; gap: 7px; padding: 8px; border-top: 1px solid var(--line); }
+.attempt-row:first-child { border-top: 0; }
+.attempt-row > span { font-family: Impact, sans-serif; font-size: 22px; color: var(--muted); text-align: center; }
+.attempt-row label { position: relative; }
+.attempt-row input { width: 100%; height: 43px; border: 1px solid var(--line); background: white; padding: 0 30px 0 9px; font-size: 17px; font-weight: 900; }
+.attempt-row label small { position: absolute; right: 8px; top: 17px; color: var(--muted); font-size: 7px; font-weight: 900; }
+.attempt-row > button { height: 43px; border: 1px solid var(--ink); background: transparent; font-size: 20px; font-weight: 900; cursor: pointer; }
+.attempt-row .good-attempt { color: #236a3c; }
+.attempt-row .miss-attempt { color: #a91f19; }
+.attempt-row.good { background: rgba(35,106,60,.1); }
+.attempt-row.miss { background: rgba(169,31,25,.1); }
+.attempt-row.good .good-attempt { background: #236a3c; color: white; }
+.attempt-row.miss .miss-attempt { background: #a91f19; color: white; }
+.attempt-row button:disabled { cursor: default; opacity: .9; }
+.competition-message { margin-top: 10px; padding: 10px 12px; background: #dcd5ca; border-left: 5px solid var(--acid); font-size: 9px; font-weight: 800; line-height: 1.4; }
+
+@media (max-width: 380px) {
+  .score-grid strong { font-size: 30px; }
+  .profile-fields { grid-template-columns: 1fr; }
+  .attempt-row { grid-template-columns: 30px 1fr 42px 42px; gap: 5px; }
+  .pr-history-row { grid-template-columns: 55px 1fr; }
+  .pr-history-row span { grid-column: 2; }
+}
