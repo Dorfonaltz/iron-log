@@ -1,4 +1,4 @@
-const CACHE = "iron-log-shell-v2";
+const CACHE = "reptriq-shell-v1";
 const SHELL = ["/", "/manifest.webmanifest", "/app-icon.svg", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {
