@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./power-features.css";
 import "./sheet-only.css";
+import "./exercise-loads.css";
 import PowerSuite from "./power-suite";
+import ExerciseLoads from "./exercise-loads";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +40,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
+        <ExerciseLoads />
         <PowerSuite />
       </body>
     </html>
