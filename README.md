@@ -1,4 +1,4 @@
-# Iron Log
+# REPTRIQ
 
 Aplicativo pessoal de treino com visual powerlifting, ficha Push/Pull/Legs e acompanhamento dos três levantamentos de competição.
 
