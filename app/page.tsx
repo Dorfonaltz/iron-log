@@ -63,7 +63,22 @@ const storage = {
   plan: "meu-treino-plan",
   records: "meu-treino-records",
   history: "meu-treino-history",
+  syncKey: "iron-log-sync-key",
 };
+
+function normalizeSyncKey(value: string) {
+  return value.replace(/[^a-fA-F0-9]/g, "").toUpperCase();
+}
+
+function createSyncKey() {
+  const bytes = new Uint8Array(16);
+  window.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+
+function formatSyncKey(value: string) {
+  return normalizeSyncKey(value).match(/.{1,4}/g)?.join("-") ?? value;
+}
 
 function todayId() {
   return ["seg", "seg", "ter", "qua", "qui", "sex", "sab"][new Date().getDay()];
@@ -99,11 +114,16 @@ export default function Home() {
   const [prReps, setPrReps] = useState("");
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("syncing");
   const [userName, setUserName] = useState("");
+  const [syncKey, setSyncKey] = useState("");
+  const [syncOpen, setSyncOpen] = useState(false);
+  const [syncDraft, setSyncDraft] = useState("");
+  const [syncMessage, setSyncMessage] = useState("");
 
   useEffect(() => {
     let cachedPlan = initialPlan;
     let cachedRecords: RecordMap = {};
     let cachedHistory: WorkoutHistory[] = [];
+    let cachedSyncKey = "";
     try {
       const savedPlan = window.localStorage.getItem(storage.plan);
       const savedRecords = window.localStorage.getItem(storage.records);
@@ -111,17 +131,29 @@ export default function Home() {
       if (savedPlan) cachedPlan = JSON.parse(savedPlan);
       if (savedRecords) cachedRecords = JSON.parse(savedRecords);
       if (savedHistory) cachedHistory = JSON.parse(savedHistory);
+      cachedSyncKey = normalizeSyncKey(window.localStorage.getItem(storage.syncKey) ?? "");
+      if (cachedSyncKey.length !== 32) {
+        cachedSyncKey = createSyncKey();
+        window.localStorage.setItem(storage.syncKey, cachedSyncKey);
+      }
     } catch { /* mantém os dados originais */ }
     setPlan(cachedPlan);
     setRecords(cachedRecords);
     setHistory(cachedHistory);
+    setSyncKey(cachedSyncKey);
     setSelectedId(todayId());
     setReady(true);
-    void pullFromCloud({ plan: cachedPlan, records: cachedRecords, history: cachedHistory });
+    void pullFromCloud({ plan: cachedPlan, records: cachedRecords, history: cachedHistory }, cachedSyncKey);
 
-    const refreshOnFocus = () => void pullFromCloud();
+    const refreshOnFocus = () => void pullFromCloud(undefined, cachedSyncKey);
     window.addEventListener("focus", refreshOnFocus);
     return () => window.removeEventListener("focus", refreshOnFocus);
+  }, []);
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      void navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+    }
   }, []);
 
   useEffect(() => {
@@ -142,12 +174,12 @@ export default function Home() {
   const totalSBD = MAIN_LIFTS.reduce((total, lift) => total + (records[lift.key]?.weight ?? 0), 0);
   const totalVolume = history.reduce((sum, workout) => sum + workout.volume, 0);
 
-  async function syncToCloud(nextPlan: WorkoutDay[], nextRecords: RecordMap, nextHistory: WorkoutHistory[]) {
+  async function syncToCloud(nextPlan: WorkoutDay[], nextRecords: RecordMap, nextHistory: WorkoutHistory[], keyOverride = syncKey) {
     setSyncStatus("syncing");
     try {
       const response = await fetch("/api/state", {
         method: "PUT",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "x-iron-sync-key": keyOverride },
         body: JSON.stringify({ plan: nextPlan, records: nextRecords, history: nextHistory }),
       });
       if (response.status === 401) { setSyncStatus("local"); return; }
@@ -158,10 +190,10 @@ export default function Home() {
     }
   }
 
-  async function pullFromCloud(fallback?: { plan: WorkoutDay[]; records: RecordMap; history: WorkoutHistory[] }) {
+  async function pullFromCloud(fallback?: { plan: WorkoutDay[]; records: RecordMap; history: WorkoutHistory[] }, keyOverride = syncKey) {
     setSyncStatus("syncing");
     try {
-      const response = await fetch("/api/state", { cache: "no-store" });
+      const response = await fetch("/api/state", { cache: "no-store", headers: { "x-iron-sync-key": keyOverride } });
       if (response.status === 401) { setSyncStatus("local"); return; }
       if (!response.ok) throw new Error("sync_failed");
       const data = await response.json() as { state: { plan: WorkoutDay[]; records: RecordMap; history: WorkoutHistory[] } | null; user?: { displayName?: string } };
@@ -181,15 +213,38 @@ export default function Home() {
         window.localStorage.setItem(storage.plan, JSON.stringify(nextPlan));
         window.localStorage.setItem(storage.records, JSON.stringify(nextRecords));
         window.localStorage.setItem(storage.history, JSON.stringify(nextHistory));
-        if (fallback) await syncToCloud(nextPlan, nextRecords, nextHistory);
+        if (fallback) await syncToCloud(nextPlan, nextRecords, nextHistory, keyOverride);
         else setSyncStatus("synced");
       } else {
         const next = fallback ?? { plan, records, history };
-        await syncToCloud(next.plan, next.records, next.history);
+        await syncToCloud(next.plan, next.records, next.history, keyOverride);
       }
     } catch {
       setSyncStatus("offline");
     }
+  }
+
+  function openSyncSettings() {
+    setSyncDraft(syncKey);
+    setSyncMessage("");
+    setSyncOpen(true);
+  }
+
+  function saveSyncSettings() {
+    const nextKey = normalizeSyncKey(syncDraft);
+    if (nextKey.length !== 32) {
+      setSyncMessage("A chave precisa ter 32 caracteres.");
+      return;
+    }
+    window.localStorage.setItem(storage.syncKey, nextKey);
+    setSyncKey(nextKey);
+    setSyncOpen(false);
+    void pullFromCloud({ plan, records, history }, nextKey);
+  }
+
+  async function copySyncKey() {
+    await navigator.clipboard.writeText(formatSyncKey(syncKey));
+    setSyncMessage("Chave copiada.");
   }
 
   function persistPlan(next: WorkoutDay[]) {
@@ -306,9 +361,9 @@ export default function Home() {
         <div className="brand-copy"><span>IRON LOG</span><small>POWERLIFTING TRAINING</small></div>
         <div className="top-stats"><strong>{totalSBD}</strong><span>TOTAL KG</span></div>
       </header>
-      <button className={`sync-banner ${syncStatus}`} onClick={() => void pullFromCloud()} aria-label="Sincronizar dados agora">
+      <button className={`sync-banner ${syncStatus}`} onClick={openSyncSettings} aria-label="Abrir sincronização entre dispositivos">
         <i /><strong>{syncStatus === "synced" ? "DADOS SINCRONIZADOS" : syncStatus === "syncing" ? "SINCRONIZANDO" : syncStatus === "offline" ? "SEM CONEXÃO" : "MODO LOCAL"}</strong>
-        <span>{syncStatus === "synced" ? (userName || "online no celular e no PC") : syncStatus === "offline" ? "toque para tentar novamente" : syncStatus === "local" ? "entre pelo link publicado para sincronizar" : "aguarde"}</span>
+        <span>{syncStatus === "synced" ? (userName || "online no celular e no PC") : syncStatus === "offline" ? "toque para configurar ou tentar novamente" : syncStatus === "local" ? "toque para configurar a chave" : "aguarde"}</span>
       </button>
 
       {view === "workout" && <>
@@ -434,6 +489,17 @@ export default function Home() {
           <span className="modal-kicker">COMPETITION LIFT • RECORDE PESSOAL</span><h2>{prExercise}</h2><p>Registre seu melhor levantamento nos três grandes.</p>
           <div className="pr-inputs"><label>PESO (KG)<input autoFocus inputMode="decimal" value={prWeight} onChange={(event) => setPrWeight(event.target.value)} placeholder="0" /></label><b>×</b><label>REPETIÇÕES<input inputMode="numeric" value={prReps} onChange={(event) => setPrReps(event.target.value)} placeholder="0" /></label></div>
           <button className="start-button" onClick={savePR}>SALVAR PR</button><button className="modal-cancel" onClick={() => setPrExercise(null)}>Cancelar</button>
+        </section>
+      </div>}
+
+      {syncOpen && <div className="modal-backdrop" onMouseDown={() => setSyncOpen(false)}>
+        <section className="pr-modal sync-modal" role="dialog" aria-modal="true" aria-label="Sincronização entre dispositivos" onMouseDown={(event) => event.stopPropagation()}>
+          <span className="modal-kicker">SINCRONIZAÇÃO PRIVADA</span><h2>Use em qualquer aparelho.</h2>
+          <p>Guarde esta chave e informe a mesma no celular e no PC. Quem tiver a chave poderá acessar seus treinos.</p>
+          <label className="sync-key-field">SUA CHAVE<input value={formatSyncKey(syncDraft)} onChange={(event) => setSyncDraft(normalizeSyncKey(event.target.value))} inputMode="text" autoCapitalize="characters" spellCheck={false} /></label>
+          {syncMessage && <small className="sync-message">{syncMessage}</small>}
+          <div className="sync-actions"><button onClick={() => void copySyncKey()}>COPIAR CHAVE ATUAL</button><button onClick={() => { const nextKey = createSyncKey(); setSyncDraft(nextKey); setSyncMessage("Nova chave criada. Salve para ativar."); }}>GERAR NOVA</button></div>
+          <button className="start-button" onClick={saveSyncSettings}>SALVAR E SINCRONIZAR</button><button className="modal-cancel" onClick={() => setSyncOpen(false)}>Cancelar</button>
         </section>
       </div>}
     </main>

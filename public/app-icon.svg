@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0b0b0d"/>
+  <path d="M70 128h372v256H70z" fill="#e9e3d8"/>
+  <path d="M70 128h372v38H70zM70 346h372v38H70z" fill="#e23a31"/>
+  <text x="256" y="302" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-size="138" font-weight="900" fill="#0b0b0d">SBD</text>
+</svg>

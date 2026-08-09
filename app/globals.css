@@ -15,6 +15,14 @@ body { margin: 0; background: #070708; color: var(--ink); font-family: Arial, He
 button, input { font: inherit; }
 button { color: inherit; }
 
+.sync-modal { max-width: 430px; }
+.sync-modal > p { line-height: 1.55; }
+.sync-key-field { display: grid; gap: 8px; margin-top: 18px; color: #77716a; font-size: 8px; font-weight: 900; letter-spacing: .14em; }
+.sync-key-field input { width: 100%; border: 2px solid var(--ink); background: #f7f1e7; color: var(--ink); padding: 13px 10px; font-family: monospace; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+.sync-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 13px; }
+.sync-actions button { min-height: 42px; border: 1px solid var(--ink); background: transparent; font-size: 8px; font-weight: 900; letter-spacing: .08em; cursor: pointer; }
+.sync-message { display: block; margin-top: 9px; color: var(--acid); font-size: 9px; font-weight: 800; }
+
 .app-shell {
   width: min(100%, 520px);
   min-height: 100vh;

@@ -39,6 +39,29 @@ function displayNameFromHeaders(request: Request, email: string) {
   try { return decodeURIComponent(encoded); } catch { return email; }
 }
 
+async function syncIdentity(request: Request) {
+  const email = request.headers.get("oai-authenticated-user-email")?.trim();
+  if (email) return { userId: email, displayName: displayNameFromHeaders(request, email) };
+
+  const syncKey = (request.headers.get("x-iron-sync-key") ?? "").replace(/[^a-fA-F0-9]/g, "").toUpperCase();
+  if (!/^[A-F0-9]{32}$/.test(syncKey)) return null;
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(syncKey));
+  const hash = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  return { userId: `sync:${hash}`, displayName: `Chave ••••${syncKey.slice(-4)}` };
+}
+
+async function ensureStateTable(env: Env) {
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS user_states (
+      user_id TEXT PRIMARY KEY NOT NULL,
+      plan_json TEXT NOT NULL,
+      records_json TEXT NOT NULL,
+      history_json TEXT NOT NULL,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL
+    )`
+  ).run();
+}
+
 function validSyncedState(value: unknown): value is { plan: unknown[]; records: Record<string, unknown>; history: unknown[] } {
   if (!value || typeof value !== "object") return false;
   const state = value as { plan?: unknown; records?: unknown; history?: unknown };
@@ -46,15 +69,16 @@ function validSyncedState(value: unknown): value is { plan: unknown[]; records: 
 }
 
 async function handleStateRequest(request: Request, env: Env) {
-  const email = request.headers.get("oai-authenticated-user-email");
-  if (!email) return json({ error: "authentication_required" }, 401);
+  const identity = await syncIdentity(request);
+  if (!identity) return json({ error: "sync_key_required" }, 401);
 
   try {
+    await ensureStateTable(env);
     if (request.method === "GET") {
       const row = await env.DB.prepare(
         "SELECT plan_json, records_json, history_json, updated_at FROM user_states WHERE user_id = ? LIMIT 1"
-      ).bind(email).first<StoredStateRow>();
-      if (!row) return json({ state: null, user: { displayName: displayNameFromHeaders(request, email) } });
+      ).bind(identity.userId).first<StoredStateRow>();
+      if (!row) return json({ state: null, user: { displayName: identity.displayName } });
       return json({
         state: {
           plan: JSON.parse(row.plan_json),
@@ -62,7 +86,7 @@ async function handleStateRequest(request: Request, env: Env) {
           history: JSON.parse(row.history_json),
           updatedAt: row.updated_at,
         },
-        user: { displayName: displayNameFromHeaders(request, email) },
+        user: { displayName: identity.displayName },
       });
     }
 
@@ -82,7 +106,7 @@ async function handleStateRequest(request: Request, env: Env) {
            records_json = excluded.records_json,
            history_json = excluded.history_json,
            updated_at = CURRENT_TIMESTAMP`
-      ).bind(email, planJson, recordsJson, historyJson).run();
+      ).bind(identity.userId, planJson, recordsJson, historyJson).run();
       return json({ ok: true });
     }
 
