@@ -1,9 +1,45 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
+  --acid: #d7d7da;
+  --ink: #0a0a0c;
+  --paper: #111216;
+  --line: rgba(255,255,255,.14);
+  --muted: #9b9da3;
+  --steel: #24252a;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
+  --acid: #24252a;
+  --ink: #111216;
+  --paper: #f4f4f2;
+  --line: rgba(17,18,22,.16);
+  --muted: #6f7177;
+  --steel: #d9dadd;
+}
+
+/* REPTRIQ branding is rendered by CSS too, so it is visible before hydration. */
+.brand-mark b,
+.brand-copy > span,
+.brand-copy > small {
+  font-size: 0;
+}
+.brand-mark b::after {
+  content: "R";
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: 22px;
+  letter-spacing: 0;
+}
+.brand-copy > span::after {
+  content: "REPTRIQ";
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: 18px;
+  letter-spacing: .14em;
+}
+.brand-copy > small::after {
+  content: "TRAIN. TRACK. EVOLVE.";
+  font-size: 7px;
+  letter-spacing: .18em;
 }
 
 .theme-toggle {
@@ -12,7 +48,7 @@
   height: 38px;
   border: 1px solid rgba(255,255,255,.18);
   background: rgba(255,255,255,.06);
-  color: #f5f0e7;
+  color: #f5f5f5;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -26,15 +62,28 @@
 :root[data-theme="dark"] body,
 :root[data-theme="dark"] html { background: #050506; }
 :root[data-theme="dark"] .app-shell { background: #111216; color: #f4f4f1; }
+:root[data-theme="dark"] .topbar { background: #09090b; color: #f5f5f5; border-bottom-color: #5a5b61; }
+:root[data-theme="dark"] .brand-mark { background: #24252a; border-color: #777980; }
+:root[data-theme="dark"] .brand-copy small { color: #9b9da3; }
+:root[data-theme="dark"] .top-stats span { color: #aeb0b6; }
 :root[data-theme="dark"] .hero { background-color: #111216; background-image: repeating-linear-gradient(135deg, transparent 0, transparent 18px, rgba(255,255,255,.025) 18px, rgba(255,255,255,.025) 19px); }
 :root[data-theme="dark"] .hero h1 em,
 :root[data-theme="dark"] .page-view > h1 em { -webkit-text-stroke-color: #f4f4f1; }
-:root[data-theme="dark"] .week-ring { border-color: #f4f4f1; border-right-color: var(--acid); box-shadow: inset 0 0 0 3px #111216, 0 0 0 2px #f4f4f1; }
+:root[data-theme="dark"] .week-ring { border-color: #f4f4f1; border-right-color: #8e9097; box-shadow: inset 0 0 0 3px #111216, 0 0 0 2px #f4f4f1; }
 :root[data-theme="dark"] .big-three-strip { border-color: #f4f4f1; background: #f4f4f1; }
 :root[data-theme="dark"] .big-three-strip button { background: #16171b; color: #f4f4f1; }
+:root[data-theme="dark"] .big-three-strip button > span { color: #c7c8cc; }
 :root[data-theme="dark"] .day-pill { border-color: rgba(255,255,255,.18); color: #f4f4f1; }
-:root[data-theme="dark"] .day-pill.active { border-color: #f4f4f1; box-shadow: 0 7px 0 #f4f4f1; }
-:root[data-theme="dark"] .rule-card { background: #191a1f; border-color: #f4f4f1; color: #f4f4f1; }
+:root[data-theme="dark"] .day-pill.active { background: #d7d7da; color: #111216; border-color: #f4f4f1; box-shadow: 0 7px 0 #7e8087; }
+:root[data-theme="dark"] .day-pill.active small { color: #53555b; }
+:root[data-theme="dark"] .workout-panel { border-top-color: #66686f; }
+:root[data-theme="dark"] .workout-heading .eyebrow,
+:root[data-theme="dark"] .exercise-main b,
+:root[data-theme="dark"] .pr-value small,
+:root[data-theme="dark"] .bottom-bar button.active span { color: #d7d7da; }
+:root[data-theme="dark"] .exercise-card.main-lift { border-left-color: #8e9097; }
+:root[data-theme="dark"] .start-button { background: #d7d7da; color: #111216; border-color: #f0f0f2; box-shadow: 0 6px 0 #66686f; }
+:root[data-theme="dark"] .rule-card { background: #191a1f; border-color: #f4f4f1; border-left-color: #777980; color: #f4f4f1; }
 :root[data-theme="dark"] .rule-card p,
 :root[data-theme="dark"] .page-intro,
 :root[data-theme="dark"] .eyebrow { color: #a4a6ad; }
@@ -50,9 +99,16 @@
 :root[data-theme="light"] body,
 :root[data-theme="light"] html { background: #e7e7e7; }
 :root[data-theme="light"] .app-shell { background: #f4f4f2; color: #111216; }
+:root[data-theme="light"] .topbar { background: #f0f0ef; color: #111216; border-bottom-color: #c7c8cb; }
+:root[data-theme="light"] .brand-mark { background: #222328; color: white; border-color: #4b4d53; }
+:root[data-theme="light"] .brand-copy small { color: #74767c; }
+:root[data-theme="light"] .top-stats span { color: #5d5f65; }
+:root[data-theme="light"] .theme-toggle { color: #111216; background: #e3e3e1; border-color: rgba(17,18,22,.18); }
 :root[data-theme="light"] .hero { background-color: #f4f4f2; }
 :root[data-theme="light"] .big-three-strip button { background: #f4f4f2; }
-:root[data-theme="light"] .rule-card { background: #e8e8e5; }
+:root[data-theme="light"] .day-pill.active { background: #24252a; color: white; box-shadow: 0 7px 0 #a8a9ad; }
+:root[data-theme="light"] .day-pill.active small { color: #d7d7da; }
+:root[data-theme="light"] .rule-card { background: #e8e8e5; border-left-color: #777980; }
 :root[data-theme="light"] .bottom-bar { background: rgba(248,248,246,.95); }
 
 @media (max-width: 390px) {
