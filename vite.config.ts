@@ -11,7 +11,7 @@ const { d1, r2 } = hostingConfig;
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
 const localBindingConfig = {
-  name: "iron-log",
+  name: "reptriq",
   main: "./worker/index.ts",
   compatibility_date: "2026-08-09",
   compatibility_flags: ["nodejs_compat"],
