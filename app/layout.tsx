@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./power-features.css";
+import "./sheet-only.css";
 import PowerSuite from "./power-suite";
 
 const geistSans = Geist({
@@ -16,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Iron Log | Powerlifting",
-  description: "Treino de força com acompanhamento dos recordes de agachamento, supino e levantamento terra.",
+  description: "Ficha de treino de força com acompanhamento dos recordes de agachamento, supino e levantamento terra.",
   other: {
     "codex-preview": "development",
   },
@@ -35,9 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         <PowerSuite />
       </body>
