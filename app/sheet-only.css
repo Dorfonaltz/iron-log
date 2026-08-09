@@ -1,0 +1,5 @@
+/* Iron Log em modo ficha: sem sessão cronometrada. */
+.workout-panel > .start-button { display: none !important; }
+.session-modal,
+.rest-timer { display: none !important; }
+.workout-panel { padding-bottom: 26px; }
