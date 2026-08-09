@@ -352,6 +352,29 @@ export default function Home() {
     setPrExercise(null);
   }
 
+  function deletePR() {
+    if (!prExercise || !records[prExercise]) return;
+    if (!window.confirm(`Apagar o PR de ${prExercise}? Esta ação não pode ser desfeita.`)) return;
+    const nextRecords = { ...records };
+    delete nextRecords[prExercise];
+    setRecords(nextRecords);
+    window.localStorage.setItem(storage.records, JSON.stringify(nextRecords));
+    void syncToCloud(plan, nextRecords, history);
+    setPrWeight("");
+    setPrReps("");
+    setPrExercise(null);
+  }
+
+  function resetAllPRs() {
+    if (recordCount === 0) return;
+    if (!window.confirm("Reiniciar todos os PRs? Agachamento, supino e terra serão apagados. Seu histórico de treinos será mantido.")) return;
+    const nextRecords = { ...records };
+    MAIN_LIFTS.forEach((lift) => delete nextRecords[lift.key]);
+    setRecords(nextRecords);
+    window.localStorage.setItem(storage.records, JSON.stringify(nextRecords));
+    void syncToCloud(plan, nextRecords, history);
+  }
+
   if (!ready) return <main className="app-shell loading-shell" aria-label="Carregando treino" />;
 
   return (
@@ -420,6 +443,7 @@ export default function Home() {
           })}
         </div>
         <p className="sbd-note">TOTAL SBD = AGACHAMENTO + SUPINO + TERRA</p>
+        {recordCount > 0 && <button className="restore-button" style={{ color: "#a91f19", fontWeight: 900 }} onClick={resetAllPRs}>REINICIAR TODOS OS PRs</button>}
       </section>}
 
       {view === "progress" && <section className="page-view">
@@ -488,7 +512,9 @@ export default function Home() {
         <section className="pr-modal" role="dialog" aria-modal="true" aria-label="Editar recorde pessoal" onMouseDown={(event) => event.stopPropagation()}>
           <span className="modal-kicker">COMPETITION LIFT • RECORDE PESSOAL</span><h2>{prExercise}</h2><p>Registre seu melhor levantamento nos três grandes.</p>
           <div className="pr-inputs"><label>PESO (KG)<input autoFocus inputMode="decimal" value={prWeight} onChange={(event) => setPrWeight(event.target.value)} placeholder="0" /></label><b>×</b><label>REPETIÇÕES<input inputMode="numeric" value={prReps} onChange={(event) => setPrReps(event.target.value)} placeholder="0" /></label></div>
-          <button className="start-button" onClick={savePR}>SALVAR PR</button><button className="modal-cancel" onClick={() => setPrExercise(null)}>Cancelar</button>
+          <button className="start-button" onClick={savePR}>SALVAR PR</button>
+          {records[prExercise] && <button className="modal-cancel" style={{ color: "#a91f19", fontWeight: 900 }} onClick={deletePR}>APAGAR ESTE PR</button>}
+          <button className="modal-cancel" onClick={() => setPrExercise(null)}>Cancelar</button>
         </section>
       </div>}
 
