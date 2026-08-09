@@ -1,7 +1,7 @@
 {
-  "name": "Iron Log — Powerlifting",
-  "short_name": "Iron Log",
-  "description": "Treinos, PRs de agachamento, supino e terra e Total SBD.",
+  "name": "REPTRIQ — Train. Track. Evolve.",
+  "short_name": "REPTRIQ",
+  "description": "Aplicativo de treino e força com PRs, histórico e evolução.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070708",
