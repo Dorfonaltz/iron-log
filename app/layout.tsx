@@ -21,32 +21,36 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "REPTRIQ | Train. Track. Evolve.",
-  description: "Aplicativo de treino e força com acompanhamento de PRs, histórico e evolução.",
+  description:
+    "Aplicativo de treino e força com acompanhamento de PRs, histórico e evolução.",
   other: {
     "codex-preview": "development",
   },
   manifest: "/manifest.webmanifest",
   icons: {
-  icon: [
-    { url: "/favicon.ico" },
-    {
-      url: "/favicon-32x32.png",
-      sizes: "32x32",
+    icon: [
+      {
+        url: "/favicon.ico",
+      },
+      {
+        url: "/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+    ],
+    shortcut: "/favicon.ico",
+    apple: {
+      url: "/apple-touch-icon.png",
+      sizes: "180x180",
       type: "image/png",
     },
-    {
-      url: "/favicon-16x16.png",
-      sizes: "16x16",
-      type: "image/png",
-    },
-  ],
-  shortcut: "/favicon.ico",
-  apple: {
-    url: "/apple-touch-icon.png",
-    sizes: "180x180",
-    type: "image/png",
   },
-},
+};
 
 export default function RootLayout({
   children,
@@ -55,7 +59,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" data-theme="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
         <ThemeBrand />
         <ExerciseLoads />
